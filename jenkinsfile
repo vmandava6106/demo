@@ -1,0 +1,30 @@
+node('java8') {
+
+  stage('configure') {
+    env.PATH =  "${tool 'maven-3.3.9'}/bin:${env:PATH}"
+  }
+
+  stage{'checkout devops code'} {
+    git 'https://github.com/wkhanvisualpathit/VProfile'
+  }  
+  
+  stage('code compile') {
+    sh 'mvn -B -V -U -e compile'
+  }
+
+  stage('code quality') {
+    sh 'mvn pmd:pmd'
+  }
+
+  stage('code test') {
+    sh 'mvn test'
+  }
+
+  stage('code coverage') {
+    sh 'mvn cobertura:cobertura'
+  }
+
+  stage('code package') {
+    sh 'mvn package'
+  }
+  
